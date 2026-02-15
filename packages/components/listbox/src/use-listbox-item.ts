@@ -67,17 +67,6 @@ export function useListboxItem<T extends object>(originalProps: UseListboxItemPr
 
   const isMobile = useIsMobile();
 
-  const {pressProps, isPressed} = usePress({
-    ref: domRef,
-    isDisabled,
-    onClick,
-    onPress,
-    onPressUp,
-    onPressStart,
-    onPressEnd,
-    onPressChange,
-  });
-
   const {isHovered, hoverProps} = useHover({
     isDisabled,
   });
@@ -97,7 +86,18 @@ export function useListboxItem<T extends object>(originalProps: UseListboxItemPr
     domRef,
   );
 
-  let itemProps = optionProps;
+  const itemProps = removeEvents(optionProps);
+
+  const {pressProps, isPressed} = usePress({
+    ref: domRef,
+    isDisabled,
+    onClick,
+    onPress,
+    onPressUp,
+    onPressStart,
+    onPressEnd,
+    onPressChange,
+  });
 
   const slots = useMemo(
     () =>
@@ -112,10 +112,6 @@ export function useListboxItem<T extends object>(originalProps: UseListboxItemPr
   );
 
   const baseStyles = cn(classNames?.base, className);
-
-  if (isReadOnly) {
-    itemProps = removeEvents(itemProps);
-  }
 
   const isHighlighted =
     (shouldHighlightOnFocus && isFocused) ||
